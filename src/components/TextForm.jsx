@@ -3,7 +3,7 @@ import React, {useRef, useState} from 'react'
 export default function TextForm(props) {
 
     const [text, setText] = useState("");
-    const textRef = useRef(null);
+    // const textRef = useRef(null);
     // const [mode, setMode] = useState({
     //     color: 'black',
     //     backgroundColor: 'white'
@@ -29,13 +29,23 @@ export default function TextForm(props) {
     // uppercase conversion
     const handleUpClick = () => {
         let newText = text.toUpperCase();
-        setText(newText);
+        if(newText === "") {
+            props.showAlert("Please enter something", "danger");
+        } else {
+            setText(newText);
+            props.showAlert("Converted to Uppercase", "success");
+        }
     }
 
     // lowercase conversion
     const handleloClick = () => {
         let newText = text.toLowerCase();
-        setText(newText);
+        if(newText === "") {
+            props.showAlert("Please enter something", "danger");
+        } else {
+            setText(newText);
+            props.showAlert("Converted to Lowercase", "success");
+        }
     }
 
     // copy text
@@ -43,16 +53,23 @@ export default function TextForm(props) {
         let newText = document.getElementById("text");
         newText.select();
         if(newText.value === "") {
-            alert("Please write something");
+            props.showAlert("Please enter something", "danger");
         } else {
             navigator.clipboard.writeText(newText.value);
-            alert("Copied!!");
+            // alert("Copied!!");
+            props.showAlert("Copied to clipboard", "success");
         }   
+        
     }
 
     // clear text
     const handleClear = () => {
-        setText("");
+        if(text === "") {
+            props.showAlert("Please enter something", "danger");
+        } else {
+            setText("");
+            props.showAlert("text is cleared", "success");
+        }
     }
 
     // find and replace function 
@@ -67,6 +84,7 @@ export default function TextForm(props) {
             // console.log(newText);
             setText(newText);
         }
+        props.showAlert("Words are replaced", "success");
     }
 
     // handle on change
@@ -80,9 +98,12 @@ export default function TextForm(props) {
         <div className='my-3'>
         <div className="d-flex flex-row justify-content-between mb-3">
             <h2>{props.heading}</h2>
-            <div className={`form-check form-switch ${props.mode==='light'?'dark':'light'}`}>
-                <input className="form-check-input" type="checkbox" onClick={props.toggleMode} role="switch" id="flexSwitchCheckDefault"/>
-                <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Dark mode</label>
+            <div className='d-flex flex-row gap-2 align-items-center'>
+                {/* <button className='btn btn-primary' onClick={props.colorfulBg ? props.colorfulbtn : "blue"}>Colorful background</button> */}
+                <div className={`form-check form-switch ${props.mode==='light'?'dark':'light'}`}>
+                    <input className="form-check-input" type="checkbox" onClick={props.toggleMode} role="switch" id="flexSwitchCheckDefault"/>
+                    <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Dark mode</label>
+                </div>
             </div>
             {/* <button className='btn btn-dark py-0' onClick={props.changeMode}>Dark mode</button> */}
         </div>
@@ -92,21 +113,11 @@ export default function TextForm(props) {
             placeholder='Enter text here'
             style={{backgroundColor : props.mode==='dark'?'#272727':'white', color: props.mode==='dark'?'#eee':'black'}}></textarea><br />
         </div>
-        <button className='btn btn-primary me-2 mt-2' onClick={handleUpClick} 
-        style={{backgroundColor: props.mode==="dark"? "#626aff" : "#0d6efd", 
-        border: props.mode==="dark"? "#747bff" : "#0d6efd"}}>Convert to Uppercase</button>
-        <button className='btn btn-primary me-2 mt-2' onClick={handleloClick}
-        style={{backgroundColor: props.mode==="dark"? "#626aff" : "#0d6efd", 
-        border: props.mode==="dark"? "#747bff" : "#0d6efd"}}>Convert to Lowercase</button>
-        <button className='btn btn-primary me-2 mt-2' onClick={handleCopy}
-        style={{backgroundColor: props.mode==="dark"? "#626aff" : "#0d6efd", 
-        border: props.mode==="dark"? "#747bff" : "#0d6efd"}}>Copy Text</button>
-        <button className='btn btn-primary me-2 mt-2' onClick={findAndReplace}
-        style={{backgroundColor: props.mode==="dark"? "#626aff" : "#0d6efd", 
-        border: props.mode==="dark"? "#747bff" : "#0d6efd"}}>Find and Replace</button>
-        <button className='btn btn-primary me-2 mt-2' onClick={handleClear}
-        style={{backgroundColor: props.mode==="dark"? "#626aff" : "#0d6efd", 
-        border: props.mode==="dark"? "#747bff" : "#0d6efd"}}>Clear Text</button>
+        <button className='btn btn-primary me-2 mt-2' onClick={handleUpClick}>Convert to Uppercase</button>
+        <button className='btn btn-primary me-2 mt-2' onClick={handleloClick}>Convert to Lowercase</button>
+        <button className='btn btn-primary me-2 mt-2' onClick={handleCopy}>Copy Text</button>
+        <button className='btn btn-primary me-2 mt-2' onClick={findAndReplace}>Find and Replace</button>
+        <button className='btn btn-primary me-2 mt-2' onClick={handleClear}>Clear Text</button>
         </div>
     </div>
     <div className="container my-3" style={{color: props.mode==='dark'?'#eee':'black'}}>
